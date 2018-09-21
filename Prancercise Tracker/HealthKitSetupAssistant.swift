@@ -38,6 +38,33 @@ class HealthKitSetupAssistant {
   }
   
   class func authorizeHealthKit(completion: @escaping (Bool, Error?) -> Swift.Void) {
+    // check for HealthKit availability on device
+    guard HKHealthStore.isHealthDataAvailable() else{
+        completion(false, HealthkitSetupError.notAvailableOnDevice)
+        return
+    }
     
-  }
+    // set up the available data types that will use the HealthKit
+    guard
+        let dateOfBirth = HKObjectType.characteristicType(forIdentifier: .dateOfBirth),
+        let bloodType = HKObjectType.characteristicType(forIdentifier: .bloodType),
+        let biologicalSex = HKObjectType.characteristicType(forIdentifier: .biologicalSex),
+        let bodyMassIndex = HKObjectType.quantityType(forIdentifier: .bodyMassIndex),
+        let height = HKObjectType.quantityType(forIdentifier: .height),
+        let bodyMass = HKObjectType.quantityType(forIdentifier: .bodyMass),
+        let activeEnergy = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)
+        else{
+            completion(false, HealthkitSetupError.dataTypeNotAvailable)
+            return
+    }
+    
+    // datatypes for HealthKit to read and write
+    let healthKitTypesToWrite: Set<HKSampleType> = [bodyMassIndex, activeEnergy, HKObjectType.workoutType()]
+    let healthKitTypesToRead: Set<HKObjectType> = [dateOfBirth, bloodType, biologicalSex, bodyMassIndex, height, bodyMass, HKObjectType.workoutType()]
+    
+    // Request authorization
+    HKHealthStore().requestAuthorization(toShare: healthKitTypesToWrite, read: healthKitTypesToRead){ (success, error) in
+        completion(success, error)
+    }
+    }
 }

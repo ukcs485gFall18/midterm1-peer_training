@@ -23,6 +23,7 @@
 		AC8EAC081EAEA8E5002DD041 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8EAC071EAEA8E5002DD041 /* Workout.swift */; };
 		ACF4F9201EB0FFED0031154C /* UserHealthProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF4F91F1EB0FFED0031154C /* UserHealthProfile.swift */; };
 		ACF4F9261EB215DE0031154C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = ACF4F9241EB215DE0031154C /* LaunchScreen.xib */; };
+		FE1CDC772154749D00045AF9 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1CDC762154749D00045AF9 /* HealthKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,8 @@
 		AC8EAC071EAEA8E5002DD041 /* Workout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workout.swift; path = "Prancercise Tracker/Workout.swift"; sourceTree = SOURCE_ROOT; };
 		ACF4F91F1EB0FFED0031154C /* UserHealthProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHealthProfile.swift; sourceTree = SOURCE_ROOT; };
 		ACF4F9251EB215DE0031154C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Prancercise Tracker/Base.lproj/LaunchScreen.xib"; sourceTree = SOURCE_ROOT; };
+		FE1CDC742154749D00045AF9 /* Prancercise Tracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Prancercise Tracker.entitlements"; path = "Prancercise Tracker/Prancercise Tracker.entitlements"; sourceTree = SOURCE_ROOT; };
+		FE1CDC762154749D00045AF9 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE1CDC772154749D00045AF9 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +66,7 @@
 			children = (
 				AC1BA50E1EAE5D2F00C99FE3 /* Prancercise Tracker */,
 				AC1BA50D1EAE5D2F00C99FE3 /* Products */,
+				FE1CDC752154749D00045AF9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +81,7 @@
 		AC1BA50E1EAE5D2F00C99FE3 /* Prancercise Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				FE1CDC742154749D00045AF9 /* Prancercise Tracker.entitlements */,
 				AC1BA52F1EAE5E5400C99FE3 /* View Controllers */,
 				AC8EABDB1EAE88DB002DD041 /* Models */,
 				AC8EABE71EAEA83F002DD041 /* AppDelegate.swift */,
@@ -122,6 +128,14 @@
 			name = "HealthKit Extensions";
 			sourceTree = "<group>";
 		};
+		FE1CDC752154749D00045AF9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FE1CDC762154749D00045AF9 /* HealthKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -154,9 +168,14 @@
 				TargetAttributes = {
 					AC1BA50B1EAE5D2F00C99FE3 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = N79LQXAXD6;
+						DevelopmentTeam = UF8JL6W2BC;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.HealthKit = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -264,9 +283,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UF8JL6W2BC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -323,9 +344,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UF8JL6W2BC;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -349,13 +372,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = N79LQXAXD6;
+				CODE_SIGN_ENTITLEMENTS = "Prancercise Tracker/Prancercise Tracker.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UF8JL6W2BC;
 				INFOPLIST_FILE = "Prancercise Tracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Razeware.Prancercise-Tracker";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.uky.cs.Prancercise-Tracker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -363,13 +391,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = N79LQXAXD6;
+				CODE_SIGN_ENTITLEMENTS = "Prancercise Tracker/Prancercise Tracker.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UF8JL6W2BC;
 				INFOPLIST_FILE = "Prancercise Tracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Razeware.Prancercise-Tracker";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.uky.cs.Prancercise-Tracker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
