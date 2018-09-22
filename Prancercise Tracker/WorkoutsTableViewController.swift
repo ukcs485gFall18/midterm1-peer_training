@@ -60,7 +60,44 @@ class WorkoutsTableViewController: UITableViewController {
   }
   
   func reloadWorkouts() {
+    WorkoutDataStore.loadPrancerciseWorkouts { (workouts, error ) in
+        self.workouts = workouts
+        self.tableView.reloadData()
+    }
+}
+    // set up UITableView DataSource
+    override func numberOfSections(in tableView: UITableView) -> Int{
+        return 1
+    }
     
-  }
-  
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let workouts = workouts else{
+            return 0
+        }
+        return workouts.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        guard let workouts = workouts else{
+            fatalError("CellForRowAtIndexPath should never get called if there are no workouts.")
+        }
+        
+        // Get a cell to display data
+        let cell = tableView.dequeueReusableCell(withIdentifier: prancerciseWorkoutCellID, for: indexPath)
+        
+        // Get the corresponding workout
+        let workout = workouts[indexPath.row]
+        
+        // show the start date in the label
+        cell.textLabel?.text = dateFormatter.string(from: workout.startDate)
+        
+        // show the calories burned in the lower label
+        if let caloriesBurned = workout.totalEnergyBurned?.doubleValue(for: HKUnit.kilocalorie()){
+            let formattedCalories = String(format: "Calories Burned: %.2f", caloriesBurned)
+            cell.detailTextLabel?.text = formattedCalories
+        }else{
+            cell.detailTextLabel?.text = nil
+        }
+        return cell
+    }
 }

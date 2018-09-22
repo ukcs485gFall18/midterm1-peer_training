@@ -34,7 +34,70 @@ class WorkoutDataStore {
   
   class func save(prancerciseWorkout: PrancerciseWorkout,
                   completion: @escaping ((Bool, Error?) -> Swift.Void)) {
+    // Set up the calorie quantity for the total energy burned
+    let calorieQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: prancerciseWorkout.totalEnergyBurned)
     
-  }
-  
+    // Build the workout using data from your Prancercise workout
+    let workout = HKWorkout(activityType: .other, start: prancerciseWorkout.start, end: prancerciseWorkout.end, duration: prancerciseWorkout.duration, totalEnergyBurned: calorieQuantity, totalDistance: nil, device: HKDevice.local(), metadata: nil)
+    
+    // Save workout to HealthKit
+    let healthStore = HKHealthStore()
+    
+    let samples = self.samples(for: prancerciseWorkout)
+    
+    healthStore.save(workout){ (success, error) in
+        guard error == nil else{
+            completion(false, error)
+            return
+        }
+        
+        healthStore.add(samples, to: workout, completion: { (samples, error) in
+            guard error == nil else{
+                completion(false, error)
+                return
+            }
+            completion(true, nil)
+        })
+    }
+}
+    
+    private class func samples(for workout: PrancerciseWorkout) -> [HKSample]{
+        var samples = [HKSample]()
+        
+        // Verify that the energy quantity type is still available to HealthKit
+        guard let energyQuantityType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned) else{
+            fatalError("Energy Burned Type is not available.")
+        }
+        
+        // Create a sample for each PrancerciseWorkoutInterval
+        for interval in workout.intervals{
+            let calorieQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: interval.totalEnergyBurned)
+            let sample = HKQuantitySample(type: energyQuantityType, quantity: calorieQuantity, start: interval.start, end: interval.end)
+            samples.append(sample)
+    }
+        return samples
+    }
+    
+    class func loadPrancerciseWorkouts(completion: @escaping (([HKWorkout]?, Error?) -> Swift.Void)){
+        // Get workouts using Other activity type
+        let workoutPredicate = HKQuery.predicateForWorkouts(with: .other)
+        
+        // Get workouts from the Prancercise App
+        let sourcePredicate = HKQuery.predicateForObjects(from: HKSource.default())
+        
+        // combine into a single predicate
+        let compound = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutPredicate, sourcePredicate])
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: true)
+        let query = HKSampleQuery(sampleType: HKObjectType.workoutType(), predicate: compound, limit: 0, sortDescriptors: [sortDescriptor]) { (query, samples, error) in
+        DispatchQueue.main.async {
+            // Cast samples as HKWorkout
+            guard let samples = samples as? [HKWorkout], error == nil else{
+                completion(nil, error)
+                return
+            }
+            completion(samples, nil)
+        }
+    }
+    HKHealthStore().execute(query)
+}
 }
