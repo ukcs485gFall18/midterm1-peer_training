@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6EBD5D5021581C760060B2B1 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBD5D4F21581C760060B2B1 /* GraphViewController.swift */; };
 		9F270C321EBE47EB0075412F /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F270C311EBE47EB0075412F /* WorkoutSession.swift */; };
 		AC891D731EDDBDC500A0F84A /* WorkoutDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC891D721EDDBDC500A0F84A /* WorkoutDataStore.swift */; };
 		AC8EABE61EAEA833002DD041 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC8EABE51EAEA833002DD041 /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6EBD5D4F21581C760060B2B1 /* GraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = SOURCE_ROOT; };
 		9F270C311EBE47EB0075412F /* WorkoutSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = SOURCE_ROOT; };
 		AC1BA50C1EAE5D2F00C99FE3 /* Prancercise Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prancercise Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC891D721EDDBDC500A0F84A /* WorkoutDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkoutDataStore.swift; path = "Prancercise Tracker/WorkoutDataStore.swift"; sourceTree = SOURCE_ROOT; };
@@ -105,6 +107,7 @@
 				AC8EABEC1EAEA855002DD041 /* WorkoutsTableViewController.swift */,
 				AC8EABEA1EAEA855002DD041 /* MasterViewController.swift */,
 				AC8EABEB1EAEA855002DD041 /* ProfileViewController.swift */,
+				6EBD5D4F21581C760060B2B1 /* GraphViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -168,7 +171,7 @@
 				TargetAttributes = {
 					AC1BA50B1EAE5D2F00C99FE3 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = UF8JL6W2BC;
+						DevelopmentTeam = HCN9AC5X94;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -224,6 +227,7 @@
 				ACF4F9201EB0FFED0031154C /* UserHealthProfile.swift in Sources */,
 				AC8EABE81EAEA83F002DD041 /* AppDelegate.swift in Sources */,
 				AC891D731EDDBDC500A0F84A /* WorkoutDataStore.swift in Sources */,
+				6EBD5D5021581C760060B2B1 /* GraphViewController.swift in Sources */,
 				AC8EABEE1EAEA855002DD041 /* MasterViewController.swift in Sources */,
 				AC8EABEF1EAEA855002DD041 /* ProfileViewController.swift in Sources */,
 				AC8EAC081EAEA8E5002DD041 /* Workout.swift in Sources */,
@@ -375,10 +379,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Prancercise Tracker/Prancercise Tracker.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UF8JL6W2BC;
+				DEVELOPMENT_TEAM = HCN9AC5X94;
 				INFOPLIST_FILE = "Prancercise Tracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.uky.cs.Prancercise-Tracker";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.uky.cs.Prancercise-Tracker12345";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
@@ -394,10 +398,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Prancercise Tracker/Prancercise Tracker.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UF8JL6W2BC;
+				DEVELOPMENT_TEAM = HCN9AC5X94;
 				INFOPLIST_FILE = "Prancercise Tracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.uky.cs.Prancercise-Tracker";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.uky.cs.Prancercise-Tracker12345";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
