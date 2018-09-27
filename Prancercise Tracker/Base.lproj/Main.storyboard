@@ -23,7 +23,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eq9-QA-ai8" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-148" y="64"/>
+            <point key="canvasLocation" x="-991" y="63"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="VgW-fR-Quf">
@@ -119,7 +119,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Cn-md-YlS" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="585" y="63"/>
+            <point key="canvasLocation" x="-271" y="63"/>
         </scene>
         <!--Workouts-->
         <scene sceneID="BPk-Kd-VMF">
@@ -151,6 +151,11 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="guU-MG-DWk" userLabel="Activity">
+                                            <rect key="frame" x="314" y="6" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button"/>
+                                        </button>
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -178,7 +183,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kcI-M0-1S5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1366" y="400"/>
+            <point key="canvasLocation" x="522" y="400"/>
         </scene>
         <!--Graph-->
         <scene sceneID="wDY-Cz-j0x">
@@ -380,7 +385,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LTL-Tc-O5D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2857" y="400"/>
+            <point key="canvasLocation" x="2169" y="400"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ha4-5V-bHR">
@@ -396,7 +401,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uYO-2F-itu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2138" y="400"/>
+            <point key="canvasLocation" x="1294" y="400"/>
         </scene>
         <!--Profile & BMI-->
         <scene sceneID="yW2-54-FD7">
@@ -618,7 +623,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iq9-kh-VGO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1366" y="-295"/>
+            <point key="canvasLocation" x="522" y="-296"/>
         </scene>
     </scenes>
 </document>

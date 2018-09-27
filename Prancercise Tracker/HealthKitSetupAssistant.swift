@@ -60,7 +60,7 @@ class HealthKitSetupAssistant {
     
     // datatypes for HealthKit to read and write
     let healthKitTypesToWrite: Set<HKSampleType> = [bodyMassIndex, activeEnergy, HKObjectType.workoutType()]
-    let healthKitTypesToRead: Set<HKObjectType> = [dateOfBirth, bloodType, biologicalSex, bodyMassIndex, height, bodyMass, HKObjectType.workoutType()]
+    let healthKitTypesToRead: Set<HKObjectType> = [dateOfBirth, bloodType, biologicalSex, bodyMassIndex, height, bodyMass, HKObjectType.workoutType(), HKActivitySummaryType.activitySummaryType()]
     
     // Request authorization
     HKHealthStore().requestAuthorization(toShare: healthKitTypesToWrite, read: healthKitTypesToRead){ (success, error) in
