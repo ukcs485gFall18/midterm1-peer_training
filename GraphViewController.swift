@@ -7,10 +7,20 @@
 //
 
 import UIKit
+import HealthKit
 
 class GraphViewController: UIViewController {
 
     @IBOutlet weak var WorkoutNum: UILabel!
+    
+    private var workouts: [HKWorkout]?
+    
+    func loadWorkoutNum() {
+        WorkoutDataStore.loadPrancerciseWorkouts { (workouts, error ) in
+            self.workouts = workouts
+            self.WorkoutNum.text = "/(self.workouts?.count)"
+        }
+    }
     
     
     override func viewDidLoad() {
