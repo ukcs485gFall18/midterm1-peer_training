@@ -30,6 +30,7 @@
 
 import UIKit
 import HealthKit
+import HealthKitUI
 
 class WorkoutsTableViewController: UITableViewController {
   
@@ -39,6 +40,7 @@ class WorkoutsTableViewController: UITableViewController {
   }
   
   private var workouts: [HKWorkout]?
+  private var summaries: [HKActivitySummary]?
   
   private let prancerciseWorkoutCellID = "PrancerciseWorkoutCell"
   
@@ -60,6 +62,9 @@ class WorkoutsTableViewController: UITableViewController {
   }
   
   func reloadWorkouts() {
+    WorkoutDataStore.readActivitySummaries{ (summaries, error) in
+        self.summaries = summaries
+    }
     WorkoutDataStore.loadPrancerciseWorkouts { (workouts, error ) in
         self.workouts = workouts
         self.tableView.reloadData()
@@ -77,11 +82,39 @@ class WorkoutsTableViewController: UITableViewController {
         return workouts.count
     }
     
+    func displaySummary(indexRow : Int){
+        guard let workouts = workouts else {
+            fatalError("Workout data unavailable.")
+        }
+        
+        let workout = workouts[indexRow]
+        
+        let summary = summaries?[indexRow]
+        let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 1)
+        let ring = HKActivityRingView()
+        if let activityGoal = summary?.activeEnergyBurnedGoal{
+            let displaySummary = HKActivitySummary()
+            displaySummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
+            displaySummary.activeEnergyBurnedGoal = activityGoal
+            ring.setActivitySummary(displaySummary, animated: true)
+        }else{
+            let defaultSummary = HKActivitySummary()
+            defaultSummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
+            defaultSummary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 600)
+            ring.setActivitySummary(defaultSummary, animated: true)
+        }
+        ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
+    }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath){
+        displaySummary(indexRow: indexPath.row)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         guard let workouts = workouts else{
             fatalError("CellForRowAtIndexPath should never get called if there are no workouts.")
         }
-        
+
         // Get a cell to display data
         let cell = tableView.dequeueReusableCell(withIdentifier: prancerciseWorkoutCellID, for: indexPath)
         
@@ -92,12 +125,30 @@ class WorkoutsTableViewController: UITableViewController {
         cell.textLabel?.text = dateFormatter.string(from: workout.startDate)
         
         // show the calories burned in the lower label
-        if let caloriesBurned = workout.totalEnergyBurned?.doubleValue(for: HKUnit.kilocalorie()){
-            let formattedCalories = String(format: "Calories Burned: %.2f", caloriesBurned)
-            cell.detailTextLabel?.text = formattedCalories
-        }else{
+        guard let caloriesBurned = workout.totalEnergyBurned?.doubleValue(for: HKUnit.kilocalorie()) else {
             cell.detailTextLabel?.text = nil
+            return cell
         }
+        let formattedCalories = String(format: "Calories Burned: %.2f", caloriesBurned)
+        cell.detailTextLabel?.text = formattedCalories
+
+        let summary = summaries?[indexPath.row]
+        let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 1)
+        let ring = HKActivityRingView()
+        if let activityGoal = summary?.activeEnergyBurnedGoal{
+            let displaySummary = HKActivitySummary()
+            displaySummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
+            displaySummary.activeEnergyBurnedGoal = activityGoal
+            ring.setActivitySummary(displaySummary, animated: true)
+        }else{
+            let defaultSummary = HKActivitySummary()
+            defaultSummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
+            defaultSummary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 600)
+            ring.setActivitySummary(defaultSummary, animated: true)
+        }
+        ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
+        ring.setActivitySummary(summary, animated: false)
+        cell.accessoryType = .detailDisclosureButton
         return cell
     }
 }

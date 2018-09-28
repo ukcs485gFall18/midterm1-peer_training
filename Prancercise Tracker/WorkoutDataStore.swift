@@ -100,4 +100,44 @@ class WorkoutDataStore {
     }
     HKHealthStore().execute(query)
 }
+    /*
+     Retrieve ActivitySummaries from HealthKit - SQLoBue
+     This function sets a start date and an end date, and then converts those dates into date components
+     for use in HKQuery/HKActivitySummary Query.
+    */
+    class func readActivitySummaries(completion: @escaping (([HKActivitySummary]?, Error?) -> Swift.Void)){
+        
+        // set the date range for the query, currently hard coded for one week
+        guard let calendar = NSCalendar(identifier: .gregorian) else{
+            fatalError("Note: this is not expected to fail.")
+        }
+        let endDate = NSDate()
+        guard let startDate = calendar.date(byAdding: .day, value: -7, to: endDate as Date, options: []) else{
+            fatalError("Error calculating start date.")
+        }
+        
+        // rebuild dates as date components
+        let units : NSCalendar.Unit = [.day, .month, .year]
+        var startDateComps = calendar.components(units , from: startDate)
+        var endDateComps = calendar.components(units , from: endDate as Date)
+        startDateComps.calendar = calendar as Calendar
+        endDateComps.calendar   = calendar as Calendar
+        
+        // set datePredicate for query
+        let datePredicate = HKQuery.predicate(forActivitySummariesBetweenStart: startDateComps, end: endDateComps)
+        
+        // build query
+        let query = HKActivitySummaryQuery(predicate: datePredicate) { (query, summaries, error) -> Void  in
+            guard let activitySummaries = summaries else{
+                guard let queryError = error else{
+                    fatalError("Error retrieving summaries.")
+                }
+                print(queryError)
+                return
+            }
+            completion(activitySummaries, nil)
+            return
+        }
+        HKHealthStore().execute(query)
+    }
 }
