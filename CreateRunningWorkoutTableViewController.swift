@@ -10,81 +10,246 @@ import UIKit
 
 class CreateRunningWorkoutTableViewController: UITableViewController {
 
+    @IBOutlet private var startTimeLabel: UILabel!
+    @IBOutlet private var durationLabel: UILabel!
+    
+    private var timer:Timer!
+    
+    var session = WorkoutSession()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1,
+                                     repeats: true,
+                                     block: { (timer) in
+                                        self.updateLabels()
+        })
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    
+    private func updateOKButtonStatus() {
+        
+        var isEnabled = false
+        
+        switch session.state {
+            
+        case .notStarted, .active:
+            isEnabled = false
+            
+        case .finished:
+            isEnabled = true
+            
+        }
+        
+        navigationItem.rightBarButtonItem?.isEnabled = isEnabled
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        session.clear()
+        updateOKButtonStatus()
+    }
+    
+    private lazy var startTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+    
+    private lazy var durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = [.pad]
+        return formatter
+    }()
+    
+    func updateLabels() {
+        
+        switch session.state {
+            
+        case .active:
+            startTimeLabel.text = startTimeFormatter.string(from: session.startDate)
+            let duration = Date().timeIntervalSince(session.startDate)
+            durationLabel.text = durationFormatter.string(from: duration)
+            
+        case .finished:
+            startTimeLabel.text = startTimeFormatter.string(from: session.startDate)
+            let duration = session.endDate.timeIntervalSince(session.startDate)
+            durationLabel.text = durationFormatter.string(from: duration)
+            
+            
+        default:
+            startTimeLabel.text = nil
+            durationLabel.text = nil
+            
+        }
+        
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        
+        switch session.state {
+            
+        case .active, .finished:
+            return 2
+            
+        case .notStarted:
+            return 0
+            
+        }
+        
+    }
+    
+    //MARK: UITableView Delegate
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        var buttonTitle: String!
+        var buttonColor: UIColor!
+        
+        switch session.state {
+            
+        case .active:
+            buttonTitle = "STOP RUNNING"
+            buttonColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+            
+        case .notStarted:
+            buttonTitle = "START RUNNING!"
+            buttonColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+            
+        case .finished:
+            buttonTitle = "NEW RUN"
+            buttonColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+            
+        }
+        
+        let buttonFrame = CGRect(x: 0, y: 0,
+                                 width: tableView.frame.size.width,
+                                 height: 44.0)
+        
+        let button = UIButton(frame: buttonFrame)
+        button.setTitle(buttonTitle, for: .normal)
+        button.addTarget(self,
+                         action: #selector(startStopButtonPressed),
+                         for: UIControlEvents.touchUpInside)
+        button.backgroundColor = buttonColor
+        return button
     }
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 44.0
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    func beginWorkout() {
+        session.start()
+        updateLabels()
+        updateOKButtonStatus()
+        tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    func finishWorkout() {
+        session.end(flag: 0)
+        updateLabels()
+        updateOKButtonStatus()
+        tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    @objc func startStopButtonPressed() {
+        
+        switch session.state {
+            
+        case .notStarted, .finished:
+            displayStartRunningAlert()
+            
+        case .active:
+            finishWorkout()
+        }
+        
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    @IBAction func cancelButtonPressed(sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    @IBAction func doneButtonPressed(sender: Any) {
+        
+        guard let currentWorkout = session.completeRunningWorkout else {
+            fatalError("Shouldn't be able to press the done button without a saved workout.")
+        }
+        
+        WorkoutDataStore.saveRun(runningWorkout: currentWorkout) { (success, error) in
+            
+            if success {
+                self.dismissAndRefreshWorkouts()
+            } else {
+                self.displayProblemSavingWorkoutAlert()
+            }
+            
+        }
+        
     }
-    */
-
+    
+    private func dismissAndRefreshWorkouts() {
+        session.clear()
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func displayStartRunningAlert() {
+        
+        let alert = UIAlertController(title: nil,
+                                      message: "Start a Running session? (Get those ankle weights ready)",
+                                      preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Yes",
+                                      style: .default) { (action) in
+                                        self.beginWorkout()
+        }
+        
+        let noAction = UIAlertAction(title: "No",
+                                     style: .cancel,
+                                     handler: nil)
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func displayProblemSavingWorkoutAlert() {
+        
+        let alert = UIAlertController(title: nil,
+                                      message: "There was a problem saving your workout",
+                                      preferredStyle: .alert)
+        
+        let okayAction = UIAlertAction(title: "O.K.",
+                                       style: .default,
+                                       handler: nil)
+        
+        alert.addAction(okayAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ 
 }
