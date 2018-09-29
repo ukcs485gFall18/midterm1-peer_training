@@ -50,7 +50,8 @@ class WorkoutSession {
     state = .active
   }
   
-    func end(flag: Int) {
+  // This function was modified by Bryan Willis
+  func end(flag: Int) {
     endDate = Date()
     addNewInterval(flag: flag)
     state = .finished
@@ -64,6 +65,7 @@ class WorkoutSession {
     runningIntervals.removeAll()
   }
   
+    // This function was modified by Bryan Willis
     private func addNewInterval(flag: Int){
         if(flag == 0){
             let interval = PrancerciseWorkoutInterval(start: startDate, end: endDate)
@@ -85,7 +87,7 @@ class WorkoutSession {
         return PrancerciseWorkout(with: intervals)
     }
   }
-    
+    //This function was added by Bryan Willis
     var completeRunningWorkout: RunningWorkout? {
         get {
             

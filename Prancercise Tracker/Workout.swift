@@ -81,6 +81,8 @@ struct PrancerciseWorkout{
     }
 }
 
+
+// The code below was added by Bryan Willis
 struct RunningWorkoutInterval {
     
     var start: Date

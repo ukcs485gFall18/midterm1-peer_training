@@ -148,7 +148,7 @@ class CreateRunningWorkoutTableViewController: UITableViewController {
     }
     
     func finishWorkout() {
-        session.end(flag: 0)
+        session.end(flag: 1)
         updateLabels()
         updateOKButtonStatus()
         tableView.reloadData()
@@ -197,7 +197,7 @@ class CreateRunningWorkoutTableViewController: UITableViewController {
     private func displayStartRunningAlert() {
         
         let alert = UIAlertController(title: nil,
-                                      message: "Start a Running session? (Get those ankle weights ready)",
+                                      message: "Start a Running session?",
                                       preferredStyle: .alert)
         
         let yesAction = UIAlertAction(title: "Yes",

@@ -259,14 +259,16 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="New Workout" id="eET-da-bt0">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="T3C-d3-l3s">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="T3C-d3-l3s">
                             <connections>
                                 <action selector="cancelButtonPressedWithSender:" destination="PbR-a5-QMK" id="pjN-Nv-Eb9"/>
+                                <segue destination="32K-7P-7gK" kind="show" id="pvs-ay-gue"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="abc-QF-b1Z">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="abc-QF-b1Z">
                             <connections>
                                 <action selector="doneButtonPressedWithSender:" destination="PbR-a5-QMK" id="FsD-R2-x94"/>
+                                <segue destination="32K-7P-7gK" kind="show" id="z2D-X6-tYg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -394,7 +396,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="qZp-5U-5yp" detailTextLabel="6JE-JK-bkt" style="IBUITableViewCellStyleSubtitle" id="RZn-7T-IrP">
+                            <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RunningWorkoutCell" textLabel="qZp-5U-5yp" detailTextLabel="6JE-JK-bkt" style="IBUITableViewCellStyleSubtitle" id="RZn-7T-IrP">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RZn-7T-IrP" id="HiW-md-aIa">
@@ -425,6 +427,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Workouts" id="Hiv-32-5KV">
+                        <barButtonItem key="leftBarButtonItem" title="Home" id="6nj-Bb-Dwl">
+                            <connections>
+                                <segue destination="pGg-6v-bdr" kind="show" id="DIZ-fI-beA"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="aIv-ma-bMv">
                             <connections>
                                 <segue destination="PbR-a5-QMK" kind="show" id="tg3-gx-gqD"/>
@@ -773,4 +780,8 @@
             <point key="canvasLocation" x="1366" y="-295"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="pvs-ay-gue"/>
+        <segue reference="DIZ-fI-beA"/>
+    </inferredMetricsTieBreakers>
 </document>

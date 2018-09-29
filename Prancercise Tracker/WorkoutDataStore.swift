@@ -101,6 +101,7 @@ class WorkoutDataStore {
         HKHealthStore().execute(query)
     }
     
+    // The code below was added by Bryan Willis
     class func saveRun(runningWorkout: RunningWorkout, completion: @escaping ((Bool, Error?) -> Swift.Void)) {
         // Set up the calorie quantity for the total energy burned
         let calorieQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: runningWorkout.totalEnergyBurned)
