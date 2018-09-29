@@ -89,15 +89,82 @@ class WorkoutDataStore {
         let compound = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutPredicate, sourcePredicate])
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: true)
         let query = HKSampleQuery(sampleType: HKObjectType.workoutType(), predicate: compound, limit: 0, sortDescriptors: [sortDescriptor]) { (query, samples, error) in
-        DispatchQueue.main.async {
-            // Cast samples as HKWorkout
-            guard let samples = samples as? [HKWorkout], error == nil else{
-                completion(nil, error)
+                DispatchQueue.main.async {
+                    // Cast samples as HKWorkout
+                    guard let samples = samples as? [HKWorkout], error == nil else{
+                        completion(nil, error)
+                        return
+                    }
+                    completion(samples, nil)
+                }
+        }
+        HKHealthStore().execute(query)
+    }
+    
+    class func save(runningWorkout: RunningWorkout, completion: @escaping ((Bool, Error?) -> Swift.Void)) {
+        // Set up the calorie quantity for the total energy burned
+        let calorieQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: runningWorkout.totalEnergyBurned)
+        
+        let workout = HKWorkout(activityType: .running, start: runningWorkout.end, end: runningWorkout.end, duration: runningWorkout.duration, totalEnergyBurned: calorieQuantity, totalDistance: nil, device: HKDevice.local(), metadata: nil)
+        
+        // Save workout to HealthKit
+        let healthStore = HKHealthStore()
+        
+        let samples = self.samples(for: runningWorkout)
+        
+        healthStore.save(workout){ (success, error) in
+            guard error == nil else{
+                completion(false, error)
                 return
             }
-            completion(samples, nil)
+            
+            healthStore.add(samples, to: workout, completion: { (samples, error) in
+                guard error == nil else{
+                    completion(false, error)
+                    return
+                }
+                completion(true, nil)
+            })
         }
     }
-    HKHealthStore().execute(query)
-}
+    
+    private class func samples(for runningWorkout: RunningWorkout) -> [HKSample]{
+        var samples = [HKSample]()
+    
+        // Verify that the energy quantity type is still available to HealthKit
+        guard let energyQuantityType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned) else{
+                fatalError("Energy Burned Type is not available")
+            }
+        
+        // Create a sample for each RunningWorkout Interval
+        for interval in runningWorkout.intervals{
+            let calorieQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: interval.totalEnergyBurned)
+            let sample = HKQuantitySample(type: energyQuantityType, quantity: calorieQuantity, start: interval.start, end: interval.end)
+            samples.append(sample)
+        }
+        return samples
+    }
+
+    class func loadRunningWorkouts(completion: @escaping (([HKWorkout]?, Error?) -> Swift.Void)){
+        //Get workouts using .running activity type
+        let workoutPredicate = HKQuery.predicateForWorkouts(with: .running)
+        
+        // Get workouts from the application
+        let sourcePredicate = HKQuery.predicateForObjects(from: HKSource.default())
+        
+        // combine into a single predicate =
+        let compound = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutPredicate, sourcePredicate])
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: true)
+        let query = HKSampleQuery(sampleType: HKObjectType.workoutType(), predicate: compound, limit: 0, sortDescriptors: [sortDescriptor]) { (query, samples, error) in
+            DispatchQueue.main.async {
+                // Cast samples as HKWorkout
+                guard let samples = samples as? [HKWorkout], error == nil else{
+                    completion(nil, error)
+                    return
+                }
+                completion(samples, nil)
+            }
+        }
+        HKHealthStore().execute(query)
+    }
 }

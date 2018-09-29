@@ -100,4 +100,4 @@ class WorkoutsTableViewController: UITableViewController {
         }
         return cell
     }
-}
+} 

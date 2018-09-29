@@ -171,7 +171,7 @@ class CreateWorkoutTableViewController: UITableViewController {
   }
   
   func finishWorkout() {
-    session.end()
+    session.end(flag: 0)
     updateLabels()
     updateOKButtonStatus()
     tableView.reloadData()
