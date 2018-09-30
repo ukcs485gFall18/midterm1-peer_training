@@ -127,9 +127,9 @@ class WorkoutsTableViewController: UITableViewController {
      Note: This should only trigger when the view is visible. - SQLoBue
     */
     @objc func hideView(on tap: UITapGestureRecognizer){
-            self.view.isHidden = true
-            self.view.alpha = 0
-            self.view.removeGestureRecognizer(tap)
+        self.view.alpha = 0
+        self.view.isHidden = true
+        self.view.removeGestureRecognizer(tap)
     }
  
     /*
