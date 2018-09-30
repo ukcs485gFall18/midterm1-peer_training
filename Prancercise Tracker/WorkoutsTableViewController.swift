@@ -159,4 +159,4 @@ class WorkoutsTableViewController: UITableViewController {
         cell.accessoryType = .detailDisclosureButton
         return cell
     }
-}
+} 
