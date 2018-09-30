@@ -33,43 +33,46 @@ import HealthKit
 import HealthKitUI
 
 class WorkoutsTableViewController: UITableViewController {
-  
-  private enum WorkoutsSegues: String {
-    case showCreateWorkout
-    case finishedCreatingWorkout
-  }
-  
-  private var workouts: [HKWorkout]?
-  private var summaries: [HKActivitySummary]?
-  
-  private let prancerciseWorkoutCellID = "PrancerciseWorkoutCell"
-  
-  lazy var dateFormatter:DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.timeStyle = .short
-    formatter.dateStyle = .medium
-    return formatter
-  }()
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    self.clearsSelectionOnViewWillAppear = false
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    reloadWorkouts()
-  }
-  
-  func reloadWorkouts() {
-    WorkoutDataStore.readActivitySummaries{ (summaries, error) in
-        self.summaries = summaries
+
+    // set tap recognizer to dismiss activity ring view - SQLoBue
+    let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(WorkoutsTableViewController.hideView))
+    
+    private enum WorkoutsSegues: String {
+        case showCreateWorkout
+        case finishedCreatingWorkout
     }
-    WorkoutDataStore.loadPrancerciseWorkouts { (workouts, error ) in
-        self.workouts = workouts
-        self.tableView.reloadData()
+    
+    private var workouts: [HKWorkout]?
+    private var summaries: [HKActivitySummary]?
+    
+    private let prancerciseWorkoutCellID = "PrancerciseWorkoutCell"
+    
+    lazy var dateFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .medium
+        return formatter
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.clearsSelectionOnViewWillAppear = false
     }
-}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadWorkouts()
+    }
+    
+    func reloadWorkouts() {
+        WorkoutDataStore.readActivitySummaries{ (summaries, error) in
+            self.summaries = summaries
+        }
+        WorkoutDataStore.loadPrancerciseWorkouts { (workouts, error ) in
+            self.workouts = workouts
+            self.tableView.reloadData()
+        }
+    }
     // set up UITableView DataSource
     override func numberOfSections(in tableView: UITableView) -> Int{
         return 1
@@ -82,7 +85,10 @@ class WorkoutsTableViewController: UITableViewController {
         return workouts.count
     }
     
-    func displaySummary(indexRow : Int){
+    /*
+     Function to build and return an ActivityRingView based on indexRow data - SQLoBue
+     */
+    func displaySummary(indexRow : Int) -> HKActivityRingView {
         guard let workouts = workouts else {
             fatalError("Workout data unavailable.")
         }
@@ -104,17 +110,36 @@ class WorkoutsTableViewController: UITableViewController {
             ring.setActivitySummary(defaultSummary, animated: true)
         }
         ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
+        return ring
     }
-    
+    /*
+     Call the displaySummary when the accessoryButton is tapped - SQLoBue
+    */
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath){
-        displaySummary(indexRow: indexPath.row)
+        let currentRing = displaySummary(indexRow: indexPath.row)
+        currentRing.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        self.view.addGestureRecognizer(tap)
+        self.view = currentRing
     }
     
+    /*
+     Function to hide Activity Ring View upon tap.
+     Note: This should only trigger when the view is visible. - SQLoBue
+    */
+    @objc func hideView(on tap: UITapGestureRecognizer){
+            self.view.isHidden = true
+            self.view.alpha = 0
+            self.view.removeGestureRecognizer(tap)
+    }
+ 
+    /*
+     Updated function to display the detail disclosure button used to display activity ring - SQLoBue
+    */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         guard let workouts = workouts else{
             fatalError("CellForRowAtIndexPath should never get called if there are no workouts.")
         }
-
+        
         // Get a cell to display data
         let cell = tableView.dequeueReusableCell(withIdentifier: prancerciseWorkoutCellID, for: indexPath)
         
@@ -131,23 +156,6 @@ class WorkoutsTableViewController: UITableViewController {
         }
         let formattedCalories = String(format: "Calories Burned: %.2f", caloriesBurned)
         cell.detailTextLabel?.text = formattedCalories
-
-        let summary = summaries?[indexPath.row]
-        let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 1)
-        let ring = HKActivityRingView()
-        if let activityGoal = summary?.activeEnergyBurnedGoal{
-            let displaySummary = HKActivitySummary()
-            displaySummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
-            displaySummary.activeEnergyBurnedGoal = activityGoal
-            ring.setActivitySummary(displaySummary, animated: true)
-        }else{
-            let defaultSummary = HKActivitySummary()
-            defaultSummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
-            defaultSummary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 600)
-            ring.setActivitySummary(defaultSummary, animated: true)
-        }
-        ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
-        ring.setActivitySummary(summary, animated: false)
         cell.accessoryType = .detailDisclosureButton
         return cell
     }

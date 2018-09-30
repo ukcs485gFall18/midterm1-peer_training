@@ -117,7 +117,7 @@ class WorkoutDataStore {
         }
         
         // rebuild dates as date components
-        let units : NSCalendar.Unit = [.day, .month, .year]
+        let units : NSCalendar.Unit = [.day, .month, .year, .era]
         var startDateComps = calendar.components(units , from: startDate)
         var endDateComps = calendar.components(units , from: endDate as Date)
         startDateComps.calendar = calendar as Calendar
@@ -127,16 +127,15 @@ class WorkoutDataStore {
         let datePredicate = HKQuery.predicate(forActivitySummariesBetweenStart: startDateComps, end: endDateComps)
         
         // build query
-        let query = HKActivitySummaryQuery(predicate: datePredicate) { (query, summaries, error) -> Void  in
-            guard let activitySummaries = summaries else{
-                guard let queryError = error else{
-                    fatalError("Error retrieving summaries.")
+        let query = HKActivitySummaryQuery(predicate: datePredicate) { (query, summaries, error) in
+            DispatchQueue.main.async {
+                // Cast samples as ActivitySummaries
+                guard let summaries = summaries as? [HKActivitySummary], error == nil else{
+                    completion(nil, error)
+                    return
                 }
-                print(queryError)
-                return
+                completion(summaries, nil)
             }
-            completion(activitySummaries, nil)
-            return
         }
         HKHealthStore().execute(query)
     }
