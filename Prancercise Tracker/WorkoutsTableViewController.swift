@@ -35,7 +35,7 @@ import HealthKitUI
 class WorkoutsTableViewController: UITableViewController {
 
     // set tap recognizer to dismiss activity ring view - SQLoBue
-    let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(WorkoutsTableViewController.hideView))
+    let tap = UITapGestureRecognizer(target: self, action:#selector(WorkoutsTableViewController.hideView))
     
     private enum WorkoutsSegues: String {
         case showCreateWorkout

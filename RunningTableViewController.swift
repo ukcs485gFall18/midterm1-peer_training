@@ -8,8 +8,12 @@
 //bbb
 import UIKit
 import HealthKit
+import HealthKitUI
 
 class RunningTableViewController: UITableViewController {
+    
+    // set tap recognizer to dismiss activity ring view - SQLoBue
+    let tap = UITapGestureRecognizer(target: self, action:#selector(RunningTableViewController.hideView))
     
     private enum RunningWorkoutsSegues: String {
         case showCreateWorkout
@@ -17,6 +21,7 @@ class RunningTableViewController: UITableViewController {
     }
     
     private var workouts: [HKWorkout]?
+    private var summaries: [HKActivitySummary]?
     
     private let RunningWorkoutCellID = "RunningWorkoutCell"
     
@@ -43,6 +48,9 @@ class RunningTableViewController: UITableViewController {
     }
     
     func reloadWorkouts() {
+        WorkoutDataStore.readActivitySummaries{ (summaries, error) in
+            self.summaries = summaries
+        }
         WorkoutDataStore.loadRunningWorkouts { (workouts, error ) in
             self.workouts = workouts
             self.tableView.reloadData()
@@ -81,7 +89,55 @@ class RunningTableViewController: UITableViewController {
         }else{
             cell.detailTextLabel?.text = nil
         }
+        cell.accessoryType = .detailDisclosureButton
         return cell
+    }
+
+    /*
+     Function to build and return an ActivityRingView based on indexRow data - SQLoBue
+     */
+    func displaySummary(indexRow : Int) -> HKActivityRingView {
+        guard let workouts = workouts else {
+            fatalError("Workout data unavailable.")
+        }
+        
+        let workout = workouts[indexRow]
+        
+        let summary = summaries?[indexRow]
+        let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 1)
+        let ring = HKActivityRingView()
+        if let activityGoal = summary?.activeEnergyBurnedGoal{
+            let displaySummary = HKActivitySummary()
+            displaySummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
+            displaySummary.activeEnergyBurnedGoal = activityGoal
+            ring.setActivitySummary(displaySummary, animated: true)
+        }else{
+            let defaultSummary = HKActivitySummary()
+            defaultSummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
+            defaultSummary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 600)
+            ring.setActivitySummary(defaultSummary, animated: true)
+        }
+        ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
+        return ring
+    }
+    /*
+     Call the displaySummary when the accessoryButton is tapped - SQLoBue
+     */
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath){
+        let currentRing = displaySummary(indexRow: indexPath.row)
+        currentRing.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        self.view.addGestureRecognizer(tap)
+        self.view = currentRing
+    }
+    
+    /*
+     Function to hide Activity Ring View upon tap.
+     Note: This should only trigger when the view is visible. - SQLoBue
+     */
+    @objc func hideView(on tap: UITapGestureRecognizer){
+        self.view.alpha = 0
+        self.view.isHidden = true
+        self.view.removeGestureRecognizer(tap)
     }
 
     /*

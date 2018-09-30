@@ -168,7 +168,7 @@ class WorkoutDataStore {
         HKHealthStore().execute(query)
     }
     
-    private func samples(for runningWorkout: RunningWorkout) -> [HKSample]{
+    private class func samples(for runningWorkout: RunningWorkout) -> [HKSample]{
         var samples = [HKSample]()
     
         // Verify that the energy quantity type is still available to HealthKit
@@ -185,7 +185,7 @@ class WorkoutDataStore {
         return samples
     }
 
-    func loadRunningWorkouts(completion: @escaping (([HKWorkout]?, Error?) -> Swift.Void)){
+    class func loadRunningWorkouts(completion: @escaping (([HKWorkout]?, Error?) -> Swift.Void)){
         //Get workouts using .running activity type
         let workoutPredicate = HKQuery.predicateForWorkouts(with: .running)
         
