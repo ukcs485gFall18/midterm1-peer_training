@@ -158,7 +158,7 @@ class WorkoutDataStore {
         let query = HKActivitySummaryQuery(predicate: datePredicate) { (query, summaries, error) in
             DispatchQueue.main.async {
                 // Cast samples as ActivitySummaries
-                guard let summaries = summaries as? [HKActivitySummary], error == nil else{
+                guard let summaries = summaries, error == nil else{
                     completion(nil, error)
                     return
                 }
