@@ -272,7 +272,6 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="abc-QF-b1Z">
                             <connections>
                                 <action selector="doneButtonPressedWithSender:" destination="PbR-a5-QMK" id="FsD-R2-x94"/>
-                                <segue destination="32K-7P-7gK" kind="show" id="z2D-X6-tYg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -284,7 +283,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m7W-lD-6Zi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1366" y="1140"/>
+            <point key="canvasLocation" x="1294" y="1130"/>
         </scene>
         <!--Graph-->
         <scene sceneID="wDY-Cz-j0x">
@@ -790,7 +789,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="z2D-X6-tYg"/>
+        <segue reference="pvs-ay-gue"/>
         <segue reference="DIZ-fI-beA"/>
     </inferredMetricsTieBreakers>
 </document>
