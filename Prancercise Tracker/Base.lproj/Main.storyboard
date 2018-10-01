@@ -266,7 +266,7 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="T3C-d3-l3s">
                             <connections>
                                 <action selector="cancelButtonPressedWithSender:" destination="PbR-a5-QMK" id="pjN-Nv-Eb9"/>
-                                <segue destination="32K-7P-7gK" kind="show" id="pvs-ay-gue"/>
+                                <segue destination="32K-7P-7gK" kind="show" identifier="Transition" id="pvs-ay-gue"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="abc-QF-b1Z">
@@ -790,7 +790,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="pvs-ay-gue"/>
+        <segue reference="z2D-X6-tYg"/>
         <segue reference="DIZ-fI-beA"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -186,7 +186,7 @@ class CreateRunningWorkoutTableViewController: UITableViewController {
             }
             
         }
-        
+        self.performSegue(withIdentifier: "Transition",sender: self)
     }
     
     private func dismissAndRefreshWorkouts() {
