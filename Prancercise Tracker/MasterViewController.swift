@@ -34,7 +34,7 @@ import UIKit
 
 class MasterViewController: UITableViewController {
   
-  private let authorizeHealthKitSection = 2
+  private let authorizeHealthKitSection = 3
   
   private func authorizeHealthKit() {
     HealthKitSetupAssistant.authorizeHealthKit{
