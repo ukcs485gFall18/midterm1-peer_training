@@ -12,23 +12,25 @@ import HealthKit
 class GraphViewController: UIViewController {
 
     
-    @IBOutlet weak var WorkoutNum23: UILabel!
-    @IBOutlet weak var WorkoutNum24: UILabel!
-    @IBOutlet weak var WorkoutNum25: UILabel!
-    @IBOutlet weak var WorkoutNum26: UILabel!
-    @IBOutlet weak var WorkoutNum27: UILabel!
-    @IBAction func GetNumber(_ sender: UIButton) {
-        loadWorkoutNum()
-    }
+    @IBOutlet weak var BarChart: BasicBarChart!
     
     private var workouts: [HKWorkout]?
     
-    // This function reads in saved workouts and determines the number that have been done each day
-    func loadWorkoutNum() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
+
+        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
         WorkoutDataStore.loadPrancerciseWorkouts { (workouts, error ) in
             self.workouts = workouts
             
             // variable num for each bar
+            var d_6 = 0
+            var d_5 = 0
             var d_4 = 0
             var d_3 = 0
             var d_2 = 0
@@ -36,15 +38,21 @@ class GraphViewController: UIViewController {
             var d0 = 0
             var other = 0
             
+            
+            let todayDate = Date()
+            let calendar = Calendar.current
+            let today = calendar.component(.day, from: todayDate)
+            
             self.workouts?.forEach { workout in
                 let date = workout.startDate
-                let todayDate = Date()
-                let calendar = Calendar.current
-                let today = calendar.component(.day, from: todayDate)
                 let dateComponents = calendar.dateComponents([.day,.month],from: date)
                 
-                // figure out how many workouts have been done from 4 days ago to today
+                // figure out how many workouts have been done over the past week
                 switch (dateComponents.day) {
+                case today-6:
+                    d_6+=1
+                case today-5:
+                    d_5+=1
                 case today-4:
                     d_4+=1
                 case today-3:
@@ -60,29 +68,30 @@ class GraphViewController: UIViewController {
                 }
             }
             
-            // Populate labels
-            self.WorkoutNum23.text = "\(d_4)"
-            self.WorkoutNum24.text = "\(d_3)"
-            self.WorkoutNum25.text = "\(d_2)"
-            self.WorkoutNum26.text = "\(d_1)"
-            self.WorkoutNum27.text = "\(d0)"
+            // Array that stores bar values
+            let workoutNums = [d_6,d_5,d_4,d_3,d_2,d_1,d0]
             
-            // TODO
-            // figure out how to make labels on left display dates from today through the past week
-            // figure out how to create a bar graph with d0-d_4 as bar values
-            // Probably create more labels so we have the most recent 7 days instead of 5
-            
+            let dataEntries = self.generateDataEntries(workoutNums: workoutNums)
+            self.BarChart.dataEntries = dataEntries
         }
     }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+    // Function that generates graph
+    func generateDataEntries(workoutNums: [Int]) -> [BarEntry] {
+        let colors = [#colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1), #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1), #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1), #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1), #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)]
+        var result: [BarEntry] = []
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMd"
+        var date = Date()
+        date.addTimeInterval(TimeInterval(-6*24*60*60))
+        // Creates 7 bars with values from workoutNums for each day over the past week
+        for i in 0...6{
+            result.append(BarEntry(color: colors[i], height: Float(workoutNums[i])/10, textValue: "\(workoutNums[i])", title: formatter.string(from: date)))
+            date.addTimeInterval(TimeInterval(24*60*60))
+        }
+        return result
     }
-    
-
     /*
     // MARK: - Navigation
 
