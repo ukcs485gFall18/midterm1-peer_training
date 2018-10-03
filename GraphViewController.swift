@@ -38,30 +38,25 @@ class GraphViewController: UIViewController {
             var d0 = 0
             var other = 0
             
-            
             let todayDate = Date()
             let calendar = Calendar.current
-            let today = calendar.component(.day, from: todayDate)
-            
             self.workouts?.forEach { workout in
                 let date = workout.startDate
-                let dateComponents = calendar.dateComponents([.day,.month],from: date)
-                
                 // figure out how many workouts have been done over the past week
-                switch (dateComponents.day) {
-                case today-6:
+                switch (calendar.component(.day, from: date)) {
+                case calendar.component(.day, from: Calendar.current.date(byAdding: .day, value: -6, to: todayDate)!):
                     d_6+=1
-                case today-5:
+                case calendar.component(.day, from: Calendar.current.date(byAdding: .day, value: -5, to: todayDate)!):
                     d_5+=1
-                case today-4:
+                case calendar.component(.day, from: Calendar.current.date(byAdding: .day, value: -4, to: todayDate)!):
                     d_4+=1
-                case today-3:
+                case calendar.component(.day, from: Calendar.current.date(byAdding: .day, value: -3, to: todayDate)!):
                     d_3+=1
-                case today-2:
+                case calendar.component(.day, from: Calendar.current.date(byAdding: .day, value: -2, to: todayDate)!):
                     d_2+=1
-                case today-1:
+                case calendar.component(.day, from: Calendar.current.date(byAdding: .day, value: -1, to: todayDate)!):
                     d_1+=1
-                case today:
+                case calendar.component(.day, from: todayDate):
                     d0+=1
                 default:
                     other+=1
@@ -87,6 +82,7 @@ class GraphViewController: UIViewController {
         date.addTimeInterval(TimeInterval(-6*24*60*60))
         // Creates 7 bars with values from workoutNums for each day over the past week
         for i in 0...6{
+            print(workoutNums[i])
             result.append(BarEntry(color: colors[i], height: Float(workoutNums[i])/10, textValue: "\(workoutNums[i])", title: formatter.string(from: date)))
             date.addTimeInterval(TimeInterval(24*60*60))
         }
