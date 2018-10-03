@@ -95,10 +95,10 @@ class WorkoutsTableViewController: UITableViewController {
         
         let workout = workouts[indexRow]
         
-        let summary = summaries?[indexRow]
         let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 1)
         let ring = HKActivityRingView()
-        if let activityGoal = summary?.activeEnergyBurnedGoal{
+        if let summary = summaries?[indexRow]{
+            let activityGoal = summary.activeEnergyBurnedGoal
             let displaySummary = HKActivitySummary()
             displaySummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
             displaySummary.activeEnergyBurnedGoal = activityGoal
@@ -107,6 +107,10 @@ class WorkoutsTableViewController: UITableViewController {
             let defaultSummary = HKActivitySummary()
             defaultSummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
             defaultSummary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 600)
+            defaultSummary.appleExerciseTime = HKQuantity(unit: HKUnit.minute(), doubleValue: workout.duration)
+            defaultSummary.appleExerciseTimeGoal = HKQuantity(unit: HKUnit.minute(), doubleValue: 30)
+            defaultSummary.appleStandHours = HKQuantity(unit: HKUnit.minute() , doubleValue: 1)
+            defaultSummary.appleStandHoursGoal = HKQuantity(unit: HKUnit.minute(), doubleValue: 12)
             ring.setActivitySummary(defaultSummary, animated: true)
         }
         ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
