@@ -176,9 +176,12 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZZy-JI-U6p" customClass="UIVisualEffectView">
+                                        <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZZy-JI-U6p">
                                             <rect key="frame" x="300" y="0.0" width="65" height="65"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="imageView">
+                                                <accessibilityTraits key="traits" image="YES"/>
+                                            </accessibility>
                                         </view>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -343,7 +346,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CZu-dK-Q8x" customClass="UIVisualEffectView">
+                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CZu-dK-Q8x">
                                             <rect key="frame" x="300" y="0.0" width="65" height="65"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -88,42 +88,49 @@ class WorkoutsTableViewController: UITableViewController {
     /*
      Function to build and return an ActivityRingView based on indexRow data - SQLoBue
      */
-    func displaySummary(indexRow : Int) -> HKActivityRingView {
+    func displaySummary(indexRow : Int) -> UIView {
         guard let workouts = workouts else {
             fatalError("Workout data unavailable.")
         }
         
         let workout = workouts[indexRow]
         
-        let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 1)
-        let ring = HKActivityRingView()
+        let defaultQuantity = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 100)
         if let summary = summaries?[indexRow]{
+            let ring = HKActivityRingView()
             let activityGoal = summary.activeEnergyBurnedGoal
             let displaySummary = HKActivitySummary()
             displaySummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
             displaySummary.activeEnergyBurnedGoal = activityGoal
             ring.setActivitySummary(displaySummary, animated: true)
+            return ring
         }else{
-            let defaultSummary = HKActivitySummary()
-            defaultSummary.activeEnergyBurned = workout.totalEnergyBurned ?? defaultQuantity
-            defaultSummary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 600)
-            defaultSummary.appleExerciseTime = HKQuantity(unit: HKUnit.minute(), doubleValue: workout.duration)
-            defaultSummary.appleExerciseTimeGoal = HKQuantity(unit: HKUnit.minute(), doubleValue: 30)
-            defaultSummary.appleStandHours = HKQuantity(unit: HKUnit.minute() , doubleValue: 1)
-            defaultSummary.appleStandHoursGoal = HKQuantity(unit: HKUnit.minute(), doubleValue: 12)
-            ring.setActivitySummary(defaultSummary, animated: true)
+            let defaultWorkoutCalories = workout.totalEnergyBurned?.doubleValue(for: HKUnit.kilocalorie()) ?? defaultQuantity.doubleValue(for: HKUnit.kilocalorie())
+            let burnCalorieGoal = 600.0
+            var colorIntensity = defaultWorkoutCalories / burnCalorieGoal
+            if colorIntensity > 1{
+                colorIntensity = 1.0
+            }
+            let imageName = #imageLiteral(resourceName: "reward_star")
+            
+            // build image from loaded Star, downloaded from Pixabay
+            let tintImage = imageName.withRenderingMode(.alwaysTemplate)
+            let imageView = UIImageView(image: tintImage)
+            imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+            imageView.image = tintImage
+            imageView.tintColor = UIColor(hue: 200, saturation: 100, brightness: 20, alpha: CGFloat(colorIntensity))
+            return imageView
         }
-        ring.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
-        return ring
     }
+    
     /*
      Call the displaySummary when the accessoryButton is tapped - SQLoBue
     */
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath){
-        let currentRing = displaySummary(indexRow: indexPath.row)
-        currentRing.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        let progressView = displaySummary(indexRow: indexPath.row)
+        progressView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         self.view.addGestureRecognizer(tap)
-        self.view = currentRing
+        self.view = progressView
     }
     
     /*
@@ -131,9 +138,7 @@ class WorkoutsTableViewController: UITableViewController {
      Note: This should only trigger when the view is visible. - SQLoBue
     */
     @objc func hideView(on tap: UITapGestureRecognizer){
-        self.view.alpha = 0
-        self.view.isHidden = true
-        self.view.removeGestureRecognizer(tap)
+        self.dismiss(animated: true, completion: nil)
     }
  
     /*
