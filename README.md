@@ -15,6 +15,8 @@ Added functionality:
 - Running has all the same functionality as prancersizing, it acts as a way for users to track multiple workout types
 - Added 'Graph' button to the screen that displays past workouts
 - When clicked, displays a bar graph showing the number of workouts done each day over the past week
+- Added info button next to each workout
+- Info button shows a ring display that helps visualize how each workout adds towards completing a more general goal
 
 Links to the original tutorial
 - Part 1: https://www.raywenderlich.com/459-healthkit-tutorial-with-swift-getting-started
